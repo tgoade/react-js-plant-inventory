@@ -1,19 +1,13 @@
 import Modal from 'react-modal';
 import db from '../firebase';
 import { useEffect, useState, useRef } from 'react';
-import { collection, addDoc, setDoc, doc, getDoc, Timestamp, onSnapshot } from 'firebase/firestore';
+import { collection, addDoc, setDoc, doc, getDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
 
-// const initialState = {
-//     plantName: '',
-//     growCondition: '',
-//     maxHeight: '',
-//     imageUrl: '',
-//     infoUrl: ''
-// }
+
 Modal.setAppElement('#root');       // To remove the Accessibility console errors
 
 const PlantsApp = () => {
-    //const [state, setState] = useState(initialState);
+    
     const initialState = {
         plantName: '',
         growthCondition: '',
@@ -25,7 +19,7 @@ const PlantsApp = () => {
     const [ modalIsOpen, setModalIsOpen ] = useState(false);
     const [{plantName, growthCondition, maxHeight, imageUrl, infoUrl}, setPlant] = useState(initialState)
     const [plants, setPlants] = useState([]);
-    const [selectedId, setSelectedId] = useState('');
+    const [editId, setEditId] = useState('');
     const plantNameRef = useRef();
     const growthConditionRef = useRef();
     const maxHeightRef = useRef();
@@ -37,21 +31,16 @@ const PlantsApp = () => {
     const imageUrlUpdateRef = useRef();
     const infoUrlUpdateRef = useRef();
 
-    // const {plantName, growCondition, maxHeight, imageUrl, infoUrl} = state;
-        
-    // const inputChangeHandler = (e) => {
-    //     let { name, value } = e.target;
-    //     setState({...state, [name]: value});
-    //     console.log(state);
-    // }
-
+    
     const collectionRef = collection(db, 'plants');
 
     const clearForm = () => {
         setPlant({...initialState});
     }
 
-    async function submitHandler(e){
+    // Add Entry to Firestore
+
+    const submitHandler = async (e) => {
         e.preventDefault();
         try {
             
@@ -71,8 +60,10 @@ const PlantsApp = () => {
         clearForm();
     }      
 
-    async function modalHandler(id) {
-        setSelectedId(id);
+    // Trigger Modal
+
+    const modalHandler = async (id) => {
+        setEditId(id);
         setModalIsOpen(true);
         clearForm();
         try {
@@ -91,12 +82,22 @@ const PlantsApp = () => {
         return id;
     }
 
-    async function editHandler(e){
-        //const plantName = prompt("Enter new plant name");
+    // Retrieve entries from Firestore
+
+    useEffect(() => {
+        const unSubscribe = onSnapshot(collection(db, 'plants'), (snapshot) => {           // onSnapshot is a realtime listener, data will update itself each time there's a change in the database. Setting it to a constant so that we can unhook it later
+            setPlants(snapshot.docs.map(doc => ({...doc.data(), id: doc.id})));
+        });
+        return unSubscribe;                                                                 // returning the function to useEffect so that it can terminate the listener.  This can also be written without the 'return', the {} after the arrow, and the constant to imply a return of the following single object.
+    }, []) 
+
+    // Edit Entry
+
+    const editHandler = async (e) => {
         e.preventDefault();
-        console.log(`Plant ID: ${selectedId}`);
+        console.log(`Plant ID: ${editId}`);
         try {
-            const docRef = doc(db, 'plants', selectedId);
+            const docRef = doc(db, 'plants', editId);
             const payload = {
                 plantName: plantNameUpdateRef.current.value,
                 growthCondition: growthConditionUpdateRef.current.value,
@@ -111,12 +112,12 @@ const PlantsApp = () => {
         setModalIsOpen(false)
     }
 
-    useEffect(() => {
-        const unSubscribe = onSnapshot(collection(db, 'plants'), (snapshot) => {           // onSnapshot is a realtime listener, data will update itself each time there's a change in the database. Setting it to a constant so that we can unhook it later
-            setPlants(snapshot.docs.map(doc => ({...doc.data(), id: doc.id})));
-        });
-        return unSubscribe;                                                                 // returning the function to useEffect so that it can terminate the listener.  This can also be written without the 'return', the {} after the arrow, and the constant to imply a return of the following single object.
-    }, []) 
+    // Delete Entry
+
+    const deleteHandler = async (deleteId) => {
+        const docRef = doc(db, 'plants', deleteId);
+        await deleteDoc(docRef);
+    }
 
     return (
         <div className='main'>
@@ -210,7 +211,7 @@ const PlantsApp = () => {
                                 <td>{plant.maxHeight}</td>
                                 <td>
                                     <i className="far fa-edit" onClick={() => modalHandler(plant.id)}></i>
-                                    <i className="far fa-trash-alt" ></i>
+                                    <i className="far fa-trash-alt" onClick={() => deleteHandler(plant.id)}></i>
                                 </td>
                             </tr>
                         ))}                    

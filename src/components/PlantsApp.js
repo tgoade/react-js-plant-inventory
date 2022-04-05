@@ -25,6 +25,7 @@ const PlantsApp = () => {
     const [ modalIsOpen, setModalIsOpen ] = useState(false);
     const [{plantName, growthCondition, maxHeight, imageUrl, infoUrl}, setPlant] = useState(initialState)
     const [plants, setPlants] = useState([]);
+    const [selectedId, setSelectedId] = useState('');
     const plantNameRef = useRef();
     const growthConditionRef = useRef();
     const maxHeightRef = useRef();
@@ -45,7 +46,7 @@ const PlantsApp = () => {
     // }
 
     const collectionRef = collection(db, 'plants');
-    
+
     const clearForm = () => {
         setPlant({...initialState});
     }
@@ -71,9 +72,10 @@ const PlantsApp = () => {
     }      
 
     async function modalHandler(id) {
-
+        setSelectedId(id);
         setModalIsOpen(true);
         clearForm();
+        try {
         const docRef = doc(db, 'plants', id);
         const docSnap = await getDoc(docRef);
             if(docSnap.exists()){
@@ -83,21 +85,30 @@ const PlantsApp = () => {
             } else {
                 console.log("No such document");
             }
+        } catch(error){
+            alert(error);
+        }
+        return id;
     }
 
-    async function editHandler(plantId){
+    async function editHandler(e){
         //const plantName = prompt("Enter new plant name");
-
-        const docRef = doc(db, 'plants', plantId);
-        const payload = {
-            plantName: plantNameRef.current.value,
-            growthCondition: growthConditionUpdateRef.current.value,
-            maxHeight: maxHeightUpdateRef.current.value,
-            imageUrl: imageUrlUpdateRef.current.value,
-            infoUrl: infoUrlUpdateRef.current.value,
-            added: Timestamp.now()
+        e.preventDefault();
+        console.log(`Plant ID: ${selectedId}`);
+        try {
+            const docRef = doc(db, 'plants', selectedId);
+            const payload = {
+                plantName: plantNameUpdateRef.current.value,
+                growthCondition: growthConditionUpdateRef.current.value,
+                maxHeight: maxHeightUpdateRef.current.value,
+                imageUrl: imageUrlUpdateRef.current.value,
+                infoUrl: infoUrlUpdateRef.current.value
+            }
+            await setDoc(docRef, payload);
+        } catch(error){
+            alert(error);
         }
-        setDoc(docRef, payload);
+        setModalIsOpen(false)
     }
 
     useEffect(() => {

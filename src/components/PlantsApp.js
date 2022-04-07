@@ -14,42 +14,66 @@ const PlantsApp = () => {
         maxHeight: '',
         imageUrl: '',
         infoUrl: '',
+        tips: '',
         added: ''
     }
     const [ modalIsOpen, setModalIsOpen ] = useState(false);
-    const [{plantName, growthCondition, maxHeight, imageUrl, infoUrl}, setPlant] = useState(initialState)
+    const [{plantName, growthCondition, maxHeight, imageUrl, infoUrl, tips}, setSelectedPlant] = useState(initialState)
+    const [enteredName, setEnteredName] = useState('');
+    const [enteredCondition, setEnteredCondition] = useState('');
+    const [enteredHeight, setEnteredHeight] = useState('');
+    const [enteredImage, setEnteredImage] = useState('');
+    const [enteredInfo, setEnteredInfo] = useState('');
+    const [enteredTips, setEnteredTips] = useState('');
+    //const [selectedName, setSelectedName] = useState('');    
     const [plants, setPlants] = useState([]);
     const [editId, setEditId] = useState('');
-    const plantNameRef = useRef();
-    const growthConditionRef = useRef();
-    const maxHeightRef = useRef();
-    const imageUrlRef = useRef();
-    const infoUrlRef = useRef();
+    // const plantNameRef = useRef();
+    // const growthConditionRef = useRef();
+    // const maxHeightRef = useRef();
+    // const imageUrlRef = useRef();
+    // const infoUrlRef = useRef();
+    // const tipsRef = useRef();
     const plantNameUpdateRef = useRef();
     const growthConditionUpdateRef = useRef();
     const maxHeightUpdateRef = useRef();
     const imageUrlUpdateRef = useRef();
     const infoUrlUpdateRef = useRef();
-
+    const tipsUpdateRef = useRef();
     
     const collectionRef = collection(db, 'plants');
 
-    const clearForm = () => {
-        setPlant({...initialState});
-    }
-
     // Add Entry to Firestore
 
+    const enteredNameHandler = (event) => {
+        setEnteredName(event.target.value);
+    }
+    const enteredConditionHandler = (event) => {
+        setEnteredCondition(event.target.value);
+    }
+    const enteredHeightHandler = (event) => {
+        setEnteredHeight(event.target.value);
+    }
+    const enteredImageHandler = (event) => {
+        setEnteredImage(event.target.value);
+    }
+    const enteredInfoHandler = (event) => {
+        setEnteredInfo(event.target.value);
+    }
+    const enteredTipsHandler = (event) => {
+        setEnteredTips(event.target.value);
+    }
     const submitHandler = async (e) => {
         e.preventDefault();
         try {
             
             const payload = {         
-                plantName: plantNameRef.current.value,
-                growthCondition: growthConditionRef.current.value,
-                maxHeight: maxHeightRef.current.value,
-                imageUrl: imageUrlRef.current.value,
-                infoUrl: infoUrlRef.current.value
+                plantName: enteredName,
+                growthCondition: enteredCondition,
+                maxHeight: enteredHeight,
+                imageUrl: enteredImage,
+                infoUrl: enteredInfo,
+                tips: enteredTips
             }
             const docRef = await addDoc(collectionRef, payload);             // Adding the const let us get the auto generated id in Firestore by retrieving 'docRef.id' 
             console.log(`The new plant id is ${docRef.id}`);
@@ -71,8 +95,9 @@ const PlantsApp = () => {
         const docSnap = await getDoc(docRef);
             if(docSnap.exists()){
                 console.log("Document data:", docSnap.data());
-                setPlant(() => docSnap.data());
-                console.log("Growth Condition:", docSnap.data().growthCondition);
+                setSelectedPlant(() => docSnap.data());
+                console.log("Selected Plant Name:", docSnap.data().plantName);
+                //setSelectedName(docSnap.data().plantName);
             } else {
                 console.log("No such document");
             }
@@ -103,7 +128,8 @@ const PlantsApp = () => {
                 growthCondition: growthConditionUpdateRef.current.value,
                 maxHeight: maxHeightUpdateRef.current.value,
                 imageUrl: imageUrlUpdateRef.current.value,
-                infoUrl: infoUrlUpdateRef.current.value
+                infoUrl: infoUrlUpdateRef.current.value,
+                tips: tipsUpdateRef.current.value
             }
             await setDoc(docRef, payload);
         } catch(error){
@@ -119,6 +145,18 @@ const PlantsApp = () => {
         await deleteDoc(docRef);
     }
 
+    // Clear form
+
+    const clearForm = () => {
+        setEnteredName('');
+        setEnteredCondition('');
+        setEnteredHeight('');
+        setEnteredImage('');
+        setEnteredInfo('');
+        setEnteredTips('');
+        setSelectedPlant({...initialState});
+    }
+
     return (
         <div className='main'>
             <header className="App-header">
@@ -126,38 +164,44 @@ const PlantsApp = () => {
                     <img src="images/head-image.jpg" alt="Top Banner" />
                 </figure>
                 <div className="entry">
-                    <form autoComplete="off" onSubmit={submitHandler}>
+                    <h2 className="centered">Add a Plant</h2>
+                    <form autoComplete="off" onSubmit={submitHandler} >
                         <div className="one-input-row">
                             <label htmlFor="plantName">Plant Name* </label>
-                            <input type="text" name="plantName" id="plantName" ref={plantNameRef} required />
+                            <input type="text" name="plantName" id="plantName" value={enteredName} onChange={enteredNameHandler}  required />
                         </div>
                         <div className="two-input-row">
                             <div className="input-one">
                                 <label htmlFor="growthCondition">Growth Condition</label>
-                                <input type="text" name="growthCondition" ref={growthConditionRef} id="growthCondition" />
+                                <input type="text" name="growthCondition" value={enteredCondition} onChange={enteredConditionHandler} id="growthCondition" />
                             </div>
                             <div className="input-two">
                                 <label htmlFor="maxHeight">Maximum Height</label>
-                                <input type="text" name="maxHeight" ref={maxHeightRef} id="maxHeight" />
+                                <input type="text" name="maxHeight" value={enteredHeight} onChange={enteredHeightHandler} id="maxHeight" />
                             </div>
                         </div>
                         <div className="two-input-row">
                             <div className="input-one">
                                 <label htmlFor="imageUrl">Image URL</label>
-                                <input type="text" name="imageUrl" ref={imageUrlRef} id="imageUrl" />
+                                <input type="text" name="imageUrl" value={enteredImage} onChange={enteredImageHandler} id="imageUrl" />
                             </div>
                             <div className="input-two">
                                 <label htmlFor="infoUrl">Info URL</label>
-                                <input type="text" name="infoUrl" ref={infoUrlRef} id="infoUrl" />
+                                <input type="text" name="infoUrl" value={enteredInfo} onChange={enteredInfoHandler} id="infoUrl" />
                             </div>
                         </div>
+                        <div className="one-input-row">
+                            <label htmlFor="plantName">Tips </label>
+                            <textarea name="tips" rows="1" value={enteredTips} onChange={enteredTipsHandler} ></textarea>
+                        </div>
                         <div className="cta">
-                            <button type="submit" >Enter</button>
+                            <button type="submit">Enter</button>
                         </div>
                     </form>
                 </div>
                 <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
                     <button className="closeModal" onClick={() => setModalIsOpen(false)}>x</button>
+                    <h2 className="centered">Plant Details</h2>
                     <form autoComplete="off" onSubmit={editHandler}>
                         <div className="one-input-row">
                             <label htmlFor="plantName">Plant Name* </label>
@@ -183,6 +227,10 @@ const PlantsApp = () => {
                                 <input type="text" name="infoUrl" defaultValue={infoUrl || ''} ref={infoUrlUpdateRef} id="infoUrl" />
                             </div>
                         </div>
+                        <div className="one-input-row">
+                            <label htmlFor="plantName">Tips </label>
+                            <textarea name="tips" rows="1" defaultValue={tips || ''} ref={tipsUpdateRef}></textarea>
+                        </div>
                         <div className="cta">
                             <button type="submit" >Update</button>
                         </div>
@@ -199,6 +247,7 @@ const PlantsApp = () => {
                             <th>Plant Name</th>
                             <th>Growth Condition</th>
                             <th>Max Height</th>
+                            <th>Tips</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -209,6 +258,7 @@ const PlantsApp = () => {
                                 <td>{plant.plantName}</td>
                                 <td>{plant.growthCondition}</td>
                                 <td>{plant.maxHeight}</td>
+                                <td>{plant.tips}</td>
                                 <td>
                                     <i className="far fa-edit" onClick={() => modalHandler(plant.id)}></i>
                                     <i className="far fa-trash-alt" onClick={() => deleteHandler(plant.id)}></i>

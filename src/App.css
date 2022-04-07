@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,400;0,500;0,600;0,700;1,100;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,400;0,500;0,600;0,700;1,100;1,400;1,500;1,600;1,700&family=Beau+Rivage&display=swap');
 
 /*********************** Reset styles ***********************/
 
@@ -66,7 +66,7 @@ select {
 /********************************************/
 
 main {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
     padding-bottom: 50px;
 }
@@ -78,16 +78,21 @@ main {
 .centered {
     text-align: center;
 }
+h2 {
+    font-family: 'Beau Rivage', cursive;
+    font-size: 45px;
+    font-weight: 100;
+}
 .entry {
-    max-width: 90%;
+    max-width: 75%;
     margin: -100px auto 50px;
     background-color: #fff;
     border: 1px solid #ced4da;
-    padding: 30px 35px 35px;
+    padding: 20px 45px 45px;
     border-radius: 20px;
     box-shadow: 0 1rem 2.5rem rgb(147 157 168 / 22%), 0 0 0 0.1rem rgb(103 110 144 / 4%);
 }
-input {
+input, textarea {
   display: block;
   width: 100%;
 }
@@ -95,7 +100,7 @@ label {
   font-size: 20px;
   margin-bottom: 2px;
 }
-input {
+input, textarea {
   border-radius: 3px;
   border: 1px solid #ced4da;
 }
@@ -140,8 +145,13 @@ input[type=reset] {
 #plantList th:first-child, #plantList td:first-child {
   width: 100px;
 }
+#plantList th:nth-child(5), #plantList td:nth-child(5) {
+  max-width: 200px;
+  text-align: left;
+}
 #plantList td {
   text-align: center;
+  padding: 5px 10px;
 }
 #plantList figure {
   width: 100px;
@@ -165,7 +175,7 @@ input[type=reset] {
 .ReactModal__Content {
   position: relative;
   max-width: 800px;
-  max-height: 350px;
+  max-height: 500px;
   margin: 0 auto;
 }
 .ReactModal__Overlay {

@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { collection, addDoc, setDoc, doc, getDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
 
 
+
 Modal.setAppElement('#root');       // To remove the Accessibility console errors
 
 const PlantsApp = () => {
@@ -14,31 +15,30 @@ const PlantsApp = () => {
         maxHeight: '',
         imageUrl: '',
         infoUrl: '',
+        videoUrl: '',
         tips: '',
         added: ''
     }
     const [ modalIsOpen, setModalIsOpen ] = useState(false);
-    const [{plantName, growthCondition, maxHeight, imageUrl, infoUrl, tips}, setSelectedPlant] = useState(initialState)
+    const [videoModal, setVideoModal] = useState(false);
+    const [{plantName, growthCondition, maxHeight, imageUrl, infoUrl, videoUrl, tips}, setSelectedPlant] = useState(initialState)
     const [enteredName, setEnteredName] = useState('');
     const [enteredCondition, setEnteredCondition] = useState('');
     const [enteredHeight, setEnteredHeight] = useState('');
     const [enteredImage, setEnteredImage] = useState('');
     const [enteredInfo, setEnteredInfo] = useState('');
-    const [enteredTips, setEnteredTips] = useState('');
-    //const [selectedName, setSelectedName] = useState('');    
+    const [enteredVideo, setEnteredVideo] = useState('');
+    const [enteredTips, setEnteredTips] = useState(''); 
     const [plants, setPlants] = useState([]);
     const [editId, setEditId] = useState('');
-    // const plantNameRef = useRef();
-    // const growthConditionRef = useRef();
-    // const maxHeightRef = useRef();
-    // const imageUrlRef = useRef();
-    // const infoUrlRef = useRef();
-    // const tipsRef = useRef();
+    //const [videoId, setVideoId] = useState('');
+    //const [sortName, setSortName] = useState('asc');
     const plantNameUpdateRef = useRef();
     const growthConditionUpdateRef = useRef();
     const maxHeightUpdateRef = useRef();
     const imageUrlUpdateRef = useRef();
     const infoUrlUpdateRef = useRef();
+    const videoUrlUpdateRef = useRef();
     const tipsUpdateRef = useRef();
     
     const collectionRef = collection(db, 'plants');
@@ -60,6 +60,9 @@ const PlantsApp = () => {
     const enteredInfoHandler = (event) => {
         setEnteredInfo(event.target.value);
     }
+    const enteredVideoHandler = (event) => {
+        setEnteredVideo(event.target.value);
+    }
     const enteredTipsHandler = (event) => {
         setEnteredTips(event.target.value);
     }
@@ -73,6 +76,7 @@ const PlantsApp = () => {
                 maxHeight: enteredHeight,
                 imageUrl: enteredImage,
                 infoUrl: enteredInfo,
+                videoUrl: enteredVideo,
                 tips: enteredTips
             }
             const docRef = await addDoc(collectionRef, payload);             // Adding the const let us get the auto generated id in Firestore by retrieving 'docRef.id' 
@@ -107,11 +111,43 @@ const PlantsApp = () => {
         return id;
     }
 
+    // Trigger Video Modal
+
+    const videoModalHandler = async (id) => {
+        setVideoModal(true);
+        //setVideoId(id);
+        try {
+        const docRef = doc(db, 'plants', id);
+        const docSnap = await getDoc(docRef);
+            if(docSnap.exists()){
+                setSelectedPlant(() => docSnap.data());
+                
+            } else {
+                console.log("No such document");
+            }
+        } catch(error){
+            alert(error);
+        }
+    }
+
     // Retrieve entries from Firestore
 
     useEffect(() => {
         const unSubscribe = onSnapshot(collection(db, 'plants'), (snapshot) => {           // onSnapshot is a realtime listener, data will update itself each time there's a change in the database. Setting it to a constant so that we can unhook it later
-            setPlants(snapshot.docs.map(doc => ({...doc.data(), id: doc.id})));
+            
+            const plantsRandom = snapshot.docs.map(doc => ({...doc.data(), id: doc.id}));
+            plantsRandom.forEach(plant => {
+                console.log(plant.plantName);
+            });
+            const plantsCompare = (a,b) => {
+                let plantA = a.plantName.toLowerCase().trim();  // to avoid case sensitivity and remove any whitespace at the start and end of string
+                let plantB = b.plantName.toLowerCase().trim();              
+                    if (plantA < plantB) { return -1 }; // sorting string ascending
+                    if (plantA > plantB) { return 1 };
+                    return 0 ;
+            }
+            const plantsSorted = plantsRandom.sort(plantsCompare);           
+            setPlants(plantsSorted);
         });
         return unSubscribe;                                                                 // returning the function to useEffect so that it can terminate the listener.  This can also be written without the 'return', the {} after the arrow, and the constant to imply a return of the following single object.
     }, []) 
@@ -129,6 +165,7 @@ const PlantsApp = () => {
                 maxHeight: maxHeightUpdateRef.current.value,
                 imageUrl: imageUrlUpdateRef.current.value,
                 infoUrl: infoUrlUpdateRef.current.value,
+                videoUrl: videoUrlUpdateRef.current.value,
                 tips: tipsUpdateRef.current.value
             }
             await setDoc(docRef, payload);
@@ -153,6 +190,7 @@ const PlantsApp = () => {
         setEnteredHeight('');
         setEnteredImage('');
         setEnteredInfo('');
+        setEnteredVideo('');
         setEnteredTips('');
         setSelectedPlant({...initialState});
     }
@@ -180,7 +218,7 @@ const PlantsApp = () => {
                                 <input type="text" name="maxHeight" value={enteredHeight} onChange={enteredHeightHandler} id="maxHeight" />
                             </div>
                         </div>
-                        <div className="two-input-row">
+                        <div className="three-input-row">
                             <div className="input-one">
                                 <label htmlFor="imageUrl">Image URL</label>
                                 <input type="text" name="imageUrl" value={enteredImage} onChange={enteredImageHandler} id="imageUrl" />
@@ -188,6 +226,10 @@ const PlantsApp = () => {
                             <div className="input-two">
                                 <label htmlFor="infoUrl">Info URL</label>
                                 <input type="text" name="infoUrl" value={enteredInfo} onChange={enteredInfoHandler} id="infoUrl" />
+                            </div>
+                            <div className="input-three">
+                                <label htmlFor="infoUrl">Video URL</label>
+                                <input type="text" name="videoUrl" value={enteredVideo} onChange={enteredVideoHandler} id="videoUrl" />
                             </div>
                         </div>
                         <div className="one-input-row">
@@ -217,7 +259,7 @@ const PlantsApp = () => {
                                 <input type="text" name="maxHeight" defaultValue={maxHeight || ''} ref={maxHeightUpdateRef} id="maxHeight" />
                             </div>
                         </div>
-                        <div className="two-input-row">
+                        <div className="three-input-row">
                             <div className="input-one">
                                 <label htmlFor="imageUrl">Image URL</label>
                                 <input type="text" name="imageUrl" defaultValue={imageUrl || ''} ref={imageUrlUpdateRef} id="imageUrl" />
@@ -225,6 +267,10 @@ const PlantsApp = () => {
                             <div className="input-two">
                                 <label htmlFor="infoUrl">Info URL</label>
                                 <input type="text" name="infoUrl" defaultValue={infoUrl || ''} ref={infoUrlUpdateRef} id="infoUrl" />
+                            </div>
+                            <div className="input-three">
+                                <label htmlFor="infoUrl">Youtube Video ID</label>
+                                <input type="text" name="videoUrl" defaultValue={videoUrl || ''} ref={videoUrlUpdateRef} id="videoUrl" />
                             </div>
                         </div>
                         <div className="one-input-row">
@@ -235,7 +281,11 @@ const PlantsApp = () => {
                             <button type="submit" >Update</button>
                         </div>
                     </form>
-                    
+                </Modal>
+                <Modal isOpen={videoModal} onRequestClose={() => setVideoModal(false)} className="video-modal">
+                    <button className="closeModal" onClick={() => setVideoModal(false)}>x</button>
+                    <iframe src={`https://www.youtube.com/embed/${videoUrl}`} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                     
                 </Modal>
         </header>
 
@@ -260,6 +310,7 @@ const PlantsApp = () => {
                                 <td>{plant.maxHeight}</td>
                                 <td>{plant.tips}</td>
                                 <td>
+                                    {plant.videoUrl ? <i className="far fa-play-circle" onClick={() => videoModalHandler(plant.id)}></i> : ""}
                                     <i className="far fa-edit" onClick={() => modalHandler(plant.id)}></i>
                                     <i className="far fa-trash-alt" onClick={() => deleteHandler(plant.id)}></i>
                                 </td>

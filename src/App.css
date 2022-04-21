@@ -107,12 +107,15 @@ input, textarea {
 .one-input-row, .two-input-row {
   margin: 0 0 10px;
 }
-.two-input-row {
+.two-input-row, .three-input-row {
     display: flex;
     justify-content: space-between;
 }
-.input-one, .input-two {
+.two-input-row .input-one, .two-input-row .input-two {
     width: 48%;
+}
+.three-input-row .input-one, .three-input-row .input-two, .three-input-row .input-three {
+  width: 31%;
 }
 input[type=reset] {
   background-color: #cdcdcd;
@@ -172,11 +175,22 @@ input[type=reset] {
 #nameValidationError {
   color: #e00;
 }
-.ReactModal__Content {
+.ReactModal__Content {  
   position: relative;
   max-width: 800px;
   max-height: 500px;
   margin: 0 auto;
+  
+}
+.video-modal {
+  display: flex;
+  align-items: center;
+  margin-top: 100px;
+}
+.video-modal iframe {
+  width: 800px;
+  height: 500px;
+  margin: 20px;
 }
 .ReactModal__Overlay {
   background-color: rgba(0, 0, 0, 0.60)!important;

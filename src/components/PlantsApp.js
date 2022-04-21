@@ -100,8 +100,6 @@ const PlantsApp = () => {
             if(docSnap.exists()){
                 console.log("Document data:", docSnap.data());
                 setSelectedPlant(() => docSnap.data());
-                console.log("Selected Plant Name:", docSnap.data().plantName);
-                //setSelectedName(docSnap.data().plantName);
             } else {
                 console.log("No such document");
             }
@@ -115,7 +113,6 @@ const PlantsApp = () => {
 
     const videoModalHandler = async (id) => {
         setVideoModal(true);
-        //setVideoId(id);
         try {
         const docRef = doc(db, 'plants', id);
         const docSnap = await getDoc(docRef);
@@ -130,15 +127,13 @@ const PlantsApp = () => {
         }
     }
 
-    // Retrieve entries from Firestore
+    // Retrieve entries from Firestore & order plants alphabetically by name
 
     useEffect(() => {
         const unSubscribe = onSnapshot(collection(db, 'plants'), (snapshot) => {           // onSnapshot is a realtime listener, data will update itself each time there's a change in the database. Setting it to a constant so that we can unhook it later
             
             const plantsRandom = snapshot.docs.map(doc => ({...doc.data(), id: doc.id}));
-            plantsRandom.forEach(plant => {
-                console.log(plant.plantName);
-            });
+            
             const plantsCompare = (a,b) => {
                 let plantA = a.plantName.toLowerCase().trim();  // to avoid case sensitivity and remove any whitespace at the start and end of string
                 let plantB = b.plantName.toLowerCase().trim();              
@@ -197,10 +192,10 @@ const PlantsApp = () => {
 
     return (
         <div className='main'>
-            <header className="App-header">
-                <figure className="head-image">
+            <header className="app-header">
+                {/* <figure className="head-image">
                     <img src="images/head-image.jpg" alt="Top Banner" />
-                </figure>
+                </figure> */}
                 <div className="entry">
                     <h2 className="centered">Add a Plant</h2>
                     <form autoComplete="off" onSubmit={submitHandler} >

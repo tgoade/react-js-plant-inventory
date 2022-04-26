@@ -149,24 +149,24 @@ input[type=reset] {
   border-radius: 10px;
   background-color: #fff;
 }
-#plantList thead tr, #plantList tr:nth-child(even) {
+thead tr, tr:nth-child(even) {
   background-color: #eee;
 }
-#plantList th{
+th{
   font-weight: 400;
 }
-#plantList th:first-child, #plantList td:first-child {
+th:first-child, td:first-child {
   width: 100px;
 }
-#plantList th:nth-child(5), #plantList td:nth-child(5) {
+th:nth-child(5), td:nth-child(5) {
   max-width: 200px;
   text-align: left;
 }
-#plantList td {
+td {
   text-align: center;
   padding: 5px 10px;
 }
-#plantList figure {
+figure {
   width: 100px;
   max-height: 100px;
   overflow: hidden;
@@ -208,6 +208,70 @@ input[type=reset] {
 .closeModal {
   position: absolute;
   top: 5px;
-  right: 10px;
+  right: 25px;
   cursor: pointer;
+}
+
+@media only screen and (max-width: 760px){
+  /* Force table to not be like tables anymore */
+	table, thead, tbody, th, td, tr { 
+		display: block; 
+	}
+  /* Hide table headers (but not display: none;, for accessibility) */
+	thead tr { 
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+  td { 
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee; 
+		position: relative;
+		padding-left: 35%; 
+    text-align: left;
+	}
+  td:before { 
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%; 
+		padding-right: 10px; 
+		white-space: nowrap;
+	}
+  /*
+	Label the data
+	*/
+    td:nth-of-type(2):before { content: "Plant Name"; }
+    td:nth-of-type(3):before { content: "Growth Condition"; }
+    td:nth-of-type(4):before { content: "Max Height"; }
+    td:nth-of-type(5):before { content: "Tips"; }
+  /* */
+  th:nth-child(5), td:nth-child(5) {
+    max-width: none;
+  }
+  figure {
+    margin: 10px 0;
+  }
+  .app-header, .inventory {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+@media only screen and (max-width: 400px){
+  td {
+    padding-left: 10px;
+  }
+  td:nth-of-type(2):before { content: none; }
+  td:nth-of-type(3):before { content: none; }
+  td:nth-of-type(4):before { content: none; }
+  td:nth-of-type(5):before { content: none; }
+  .two-input-row, .three-input-row {
+    flex-direction: column;
+  }
+  .two-input-row .input-one, .two-input-row .input-two, .three-input-row .input-one, .three-input-row .input-two, .three-input-row .input-three {
+    width: 100%;
+  }
 }

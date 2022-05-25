@@ -41,6 +41,7 @@ body {
   text-rendering: optimizeSpeed;
   line-height: 1.5;
   font-family: 'Barlow Condensed', sans-serif;
+  background-color: mintcream;
 }
 
 /* A elements that don't have a class get default styles */
@@ -72,7 +73,7 @@ main {
 .app-header {
   background: url('images/head-image.jpg') no-repeat top center;
   background-size: cover;
-  padding: 100px 0 180px;
+  padding: 100px 10px 180px;
 }
 .head-image {
     border-radius: 10px;
@@ -127,6 +128,8 @@ input[type=reset] {
 .inventory {
   max-width: 1200px;
   margin: -130px auto 0;  
+  padding-left: 10px;
+  padding-right: 10px;
 }
 .cta button {
   padding: 6px 0;
@@ -255,12 +258,15 @@ figure {
   figure {
     margin: 10px 0;
   }
-  .app-header, .inventory {
+  .app-header {
+    padding: 10px 10px 90px 10px;
+  }
+  .inventory {
     padding-left: 10px;
     padding-right: 10px;
   }
 }
-@media only screen and (max-width: 400px){
+@media only screen and (max-width: 400px){  
   td {
     padding-left: 10px;
   }

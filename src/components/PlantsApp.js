@@ -4,8 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { collection, addDoc, setDoc, doc, getDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
 
 
-
-Modal.setAppElement('#root');       // To remove the Accessibility console errors
+if (process.env.NODE_ENV !== 'test') Modal.setAppElement('#root');              // To remove the Accessibility console errors, only apply when not testing   
 
 const PlantsApp = () => {
     
@@ -31,8 +30,6 @@ const PlantsApp = () => {
     const [enteredTips, setEnteredTips] = useState(''); 
     const [plants, setPlants] = useState([]);
     const [editId, setEditId] = useState('');
-    //const [videoId, setVideoId] = useState('');
-    //const [sortName, setSortName] = useState('asc');
     const plantNameUpdateRef = useRef();
     const growthConditionUpdateRef = useRef();
     const maxHeightUpdateRef = useRef();
@@ -68,8 +65,7 @@ const PlantsApp = () => {
     }
     const submitHandler = async (e) => {
         e.preventDefault();
-        try {
-            
+        try {            
             const payload = {         
                 plantName: enteredName,
                 growthCondition: enteredCondition,
@@ -98,7 +94,6 @@ const PlantsApp = () => {
         const docRef = doc(db, 'plants', id);
         const docSnap = await getDoc(docRef);
             if(docSnap.exists()){
-                console.log("Document data:", docSnap.data());
                 setSelectedPlant(() => docSnap.data());
             } else {
                 console.log("No such document");
@@ -151,7 +146,6 @@ const PlantsApp = () => {
 
     const editHandler = async (e) => {
         e.preventDefault();
-        console.log(`Plant ID: ${editId}`);
         try {
             const docRef = doc(db, 'plants', editId);
             const payload = {
@@ -193,9 +187,6 @@ const PlantsApp = () => {
     return (
         <div className='main'>
             <header className="app-header">
-                {/* <figure className="head-image">
-                    <img src="images/head-image.jpg" alt="Top Banner" />
-                </figure> */}
                 <div className="entry">
                     <h2 className="centered">Add a Plant</h2>
                     <form autoComplete="off" onSubmit={submitHandler} >
@@ -278,21 +269,21 @@ const PlantsApp = () => {
                     </form>
                 </Modal>
                 <Modal isOpen={videoModal} onRequestClose={() => setVideoModal(false)} className="video-modal">
-                    <button className="closeModal" onClick={() => setVideoModal(false)}>x</button>
+                    <button className="closeModal" aria-label="close-modal" onClick={() => setVideoModal(false)}>x</button>
                     <iframe src={`https://www.youtube.com/embed/${videoUrl}`} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                      
                 </Modal>
         </header>
 
         <div className="inventory">
-                <table className="list" id="plantList">
+                <table className="list" role="table" id="plantList">
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Plant Name</th>
-                            <th>Growth Condition</th>
-                            <th>Max Height</th>
-                            <th>Tips</th>
+                            <th aria-label="header-name">Plant Name</th>
+                            <th aria-label="growth-condition">Growth Condition</th>
+                            <th aria-label="max-height">Max Height</th>
+                            <th aria-label="tips">Tips</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -300,12 +291,12 @@ const PlantsApp = () => {
                         {plants && plants.map((plant) => (
                             <tr key={plant.id}>
                                 <td><a href={plant.infoUrl} target="_blank" rel="noreferrer" className="plant.infoLink"><figure><img src={plant.imageUrl} alt="" className="plantThumbPic"/></figure></a></td>
-                                <td>{plant.plantName}</td>
+                                <td aria-label="plant-name">{plant.plantName}</td>
                                 <td>{plant.growthCondition}</td>
                                 <td>{plant.maxHeight}</td>
                                 <td>{plant.tips}</td>
                                 <td>
-                                    {plant.videoUrl ? <i className="far fa-play-circle" onClick={() => videoModalHandler(plant.id)}></i> : ""}
+                                    {plant.videoUrl ? <i className="far fa-play-circle" aria-label="play-button" onClick={() => videoModalHandler(plant.id)}></i> : ""}
                                     <i className="far fa-edit" onClick={() => modalHandler(plant.id)}></i>
                                     <i className="far fa-trash-alt" onClick={() => deleteHandler(plant.id)}></i>
                                 </td>

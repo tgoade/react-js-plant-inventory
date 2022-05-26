@@ -229,7 +229,7 @@ const PlantsApp = () => {
                 </div>
                 <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
                     <button className="closeModal" onClick={() => setModalIsOpen(false)}>x</button>
-                    <h2 className="centered">Plant Details</h2>
+                    <h2>Plant Details</h2>
                     <form autoComplete="off" onSubmit={editHandler}>
                         <div className="one-input-row">
                             <label htmlFor="plantName">Plant Name* </label>

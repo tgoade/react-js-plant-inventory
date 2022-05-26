@@ -23,7 +23,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "sass" : "sass src/sass:src/css --watch --no-source-map"
   },
   "eslintConfig": {
     "extends": [
@@ -45,6 +46,7 @@
   },
   "devDependencies": {
     "@testing-library/dom": "^8.13.0",
-    "@testing-library/user-event": "^14.1.1"
+    "@testing-library/user-event": "^14.1.1",
+    "sass": "^1.52.1"
   }
 }

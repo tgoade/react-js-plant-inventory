@@ -1,0 +1,320 @@
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,400;0,500;0,600;0,700;1,100;1,400;1,500;1,600;1,700&family=Beau+Rivage&display=swap");
+/*********************** Reset styles ***********************/
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role=list],
+ol[role=list] {
+  list-style: none;
+}
+
+/* Set core root defaults */
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+/* Set core body defaults */
+body {
+  font-size: 20px;
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+  font-family: "Barlow Condensed", sans-serif;
+  background-color: mintcream;
+}
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+/* Make images easier to work with */
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/********************************************/
+.ReactModal__Content .cta, .video-modal, .inventory td, .entry .cta, h2 {
+  text-align: center;
+}
+
+.video-modal, .three-input-row, .two-input-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+form button {
+  padding: 6px 0;
+  border-radius: 5px;
+  font-size: 20px;
+  color: #fff;
+  width: 50%;
+  margin-top: 12px;
+  cursor: pointer;
+  background-color: #04a846;
+  border: none;
+}
+
+h2 {
+  font-family: "Beau Rivage", cursive;
+  font-size: 45px;
+  font-weight: 100;
+}
+
+main {
+  margin: 0 auto;
+  padding-bottom: 50px;
+}
+
+.app-header {
+  background: url("../images/head-image.jpg") no-repeat top center;
+  background-size: cover;
+  padding: 100px 10px 180px;
+}
+
+.entry {
+  max-width: 1200px;
+  margin: 0 auto 50px;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  padding: 10px 45px 35px;
+  border-radius: 5px;
+  box-shadow: 0 1rem 2.5rem rgba(147, 157, 168, 0.22), 0 0 0 0.1rem rgba(103, 110, 144, 0.04);
+}
+.one-input-row, .two-input-row, .three-input-row {
+  margin: 0 0 10px;
+}
+
+.two-input-row .input-one, .two-input-row .input-two {
+  width: 48%;
+}
+
+.three-input-row .input-one, .three-input-row .input-two, .three-input-row .input-three {
+  width: 31%;
+}
+
+label {
+  font-size: 20px;
+  margin-bottom: 2px;
+}
+
+input, textarea {
+  display: block;
+  width: 100%;
+  border-radius: 3px;
+  border: 1px solid #ced4da;
+}
+
+.inventory {
+  max-width: 1200px;
+  margin: -130px auto 0;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.inventory table {
+  width: 100%;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  background-color: #fff;
+}
+.inventory thead tr, .inventory tr:nth-child(even) {
+  background-color: #eee;
+}
+.inventory th {
+  font-weight: 400;
+}
+.inventory th:first-child, .inventory td:first-child {
+  width: 100px;
+}
+.inventory td {
+  padding: 5px 10px;
+}
+.inventory td:nth-child(5) {
+  max-width: 200px;
+  text-align: left;
+}
+.inventory figure {
+  width: 100px;
+  max-height: 100px;
+  overflow: hidden;
+}
+.inventory img {
+  max-width: 150px;
+  max-height: 150px;
+}
+.inventory .far {
+  cursor: pointer;
+  margin: 0 10px;
+}
+
+.video-modal {
+  margin-top: 100px;
+}
+.video-modal iframe {
+  width: 800px;
+  height: 500px;
+  margin: 20px;
+}
+
+.hide {
+  display: none;
+}
+
+#nameValidationError {
+  color: #e00;
+}
+
+.ReactModal__Content {
+  position: relative;
+  max-width: 800px;
+  max-height: 500px;
+  margin: 0 auto;
+}
+.ReactModal__Overlay {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+}
+
+.closeModal {
+  position: absolute;
+  top: 5px;
+  right: 25px;
+  cursor: pointer;
+}
+
+.ReactModal__Overlay {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+}
+
+.closeModal {
+  position: absolute;
+  top: 5px;
+  right: 25px;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 760px) {
+  /* Force table to not be like tables anymore */
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+
+  /* Hide table headers (but not display: none;, for accessibility) */
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  .app-header {
+    padding: 10px 10px 90px 10px;
+  }
+
+  .inventory {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .inventory td {
+    /* Behave  like a "row" */
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 35%;
+    text-align: left;
+    min-height: 41px;
+  }
+  .inventory td:before {
+    /* Now like a table header */
+    position: absolute;
+    /* Top/left values mimic padding */
+    top: 6px;
+    left: 6px;
+    width: 45%;
+    text-align: left;
+    padding-right: 10px;
+    white-space: nowrap;
+  }
+  .inventory td:nth-of-type(1):before {
+    content: "";
+  }
+  .inventory td:nth-of-type(2):before {
+    content: "Plant Name";
+  }
+  .inventory td:nth-of-type(3):before {
+    content: "Growth Condition";
+  }
+  .inventory td:nth-of-type(4):before {
+    content: "Max Height";
+  }
+  .inventory td:nth-of-type(5):before {
+    content: "Tips";
+  }
+  .inventory td:nth-of-type(6):before {
+    content: "";
+  }
+  .inventory th:nth-child(5), .inventory td:nth-child(5) {
+    max-width: none;
+  }
+  .inventory figure {
+    margin: 10px 0;
+  }
+}
+@media only screen and (max-width: 400px) {
+  .two-input-row, .three-input-row {
+    flex-direction: column;
+  }
+  .two-input-row .input-one, .two-input-row .input-two, .two-input-row .input-three, .three-input-row .input-one, .three-input-row .input-two, .three-input-row .input-three {
+    width: 100%;
+  }
+
+  .inventory td {
+    padding-left: 10px;
+    min-height: auto;
+  }
+  .inventory td:nth-of-type(1):before {
+    content: none;
+  }
+  .inventory td:nth-of-type(2):before {
+    content: none;
+  }
+  .inventory td:nth-of-type(3):before {
+    content: none;
+  }
+  .inventory td:nth-of-type(4):before {
+    content: none;
+  }
+  .inventory td:nth-of-type(5):before {
+    content: none;
+  }
+  .inventory td:nth-of-type(6):before {
+    content: none;
+  }
+}

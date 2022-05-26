@@ -1,5 +1,5 @@
 // import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import './App.css';
+import './sass/App.scss';
 import PlantsApp from "./components/PlantsApp";
 
 function App() {
